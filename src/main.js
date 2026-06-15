@@ -190,6 +190,114 @@ const MODELS = {
       ["height", "Wandhöhe", 40, 200, 1, "Höhe an der Wand"],
       ["thickness", "Materialstärke", 4, 18, 0.5, "Stärke der Konstruktion"]
     ]
+  },
+  gridbin: {
+    title: "Rasterbox",
+    defaults: { width: 84, depth: 84, height: 45, wall: 2, bottom: 3 },
+    fields: [
+      ["width", "Breite", 42, 210, 42, "Rastermaß in 42-mm-Schritten"],
+      ["depth", "Tiefe", 42, 210, 42, "Rastermaß in 42-mm-Schritten"],
+      ["height", "Höhe", 20, 120, 5, "Gesamthöhe der Box"],
+      ["wall", "Wandstärke", 1.2, 5, 0.2, "Stärke der Seitenwände"],
+      ["bottom", "Bodenstärke", 1.2, 6, 0.2, "Stärke des Bodens"]
+    ]
+  },
+  organizer: {
+    title: "Fächerbox",
+    defaults: { width: 120, depth: 80, height: 35, wall: 2, dividers: 3 },
+    fields: [
+      ["width", "Breite", 60, 240, 5, "Gesamtbreite"],
+      ["depth", "Tiefe", 40, 180, 5, "Gesamttiefe"],
+      ["height", "Höhe", 15, 100, 5, "Gesamthöhe"],
+      ["wall", "Wandstärke", 1.2, 5, 0.2, "Wände und Trennstege"],
+      ["dividers", "Fächer", 2, 8, 1, "Anzahl gleich großer Fächer"]
+    ]
+  },
+  cablecomb: {
+    title: "Kabelkamm",
+    defaults: { cables: 6, diameter: 5, spacing: 4, thickness: 4, depth: 10 },
+    fields: [
+      ["cables", "Kabelanzahl", 2, 16, 1, "Anzahl der Kabelführungen"],
+      ["diameter", "Kabeldurchmesser", 2, 15, 0.5, "Durchmesser je Kabel"],
+      ["spacing", "Zwischenraum", 1, 10, 0.5, "Abstand zwischen Kabeln"],
+      ["thickness", "Bodenstärke", 2, 10, 0.5, "Stärke unter den Öffnungen"],
+      ["depth", "Tiefe", 5, 25, 1, "Tiefe des Kamms"]
+    ]
+  },
+  adapter: {
+    title: "Schlauchadapter",
+    defaults: { diameter1: 32, diameter2: 20, length: 60, wall: 2.4 },
+    fields: [
+      ["diameter1", "Durchmesser A", 8, 100, 1, "Größere Anschlussseite"],
+      ["diameter2", "Durchmesser B", 5, 90, 1, "Kleinere Anschlussseite"],
+      ["length", "Länge", 20, 150, 5, "Gesamtlänge des Adapters"],
+      ["wall", "Wandstärke", 1, 6, 0.2, "Materialstärke"]
+    ]
+  },
+  pipeclamp: {
+    title: "Rohrschelle",
+    defaults: { diameter: 25, width: 15, wall: 3, foot: 18 },
+    fields: [
+      ["diameter", "Rohrdurchmesser", 8, 80, 1, "Innendurchmesser der Schelle"],
+      ["width", "Breite", 6, 35, 1, "Breite entlang des Rohres"],
+      ["wall", "Wandstärke", 1.5, 8, 0.5, "Stärke der Schelle"],
+      ["foot", "Fußbreite", 8, 40, 1, "Breite der Montagefüße"]
+    ]
+  },
+  bearing: {
+    title: "Lagerhalter",
+    defaults: { bearing: 22, width: 42, height: 38, depth: 12, base: 5 },
+    fields: [
+      ["bearing", "Lagersitz", 8, 60, 0.5, "Durchmesser des Kugellagers"],
+      ["width", "Breite", 25, 100, 1, "Gesamtbreite"],
+      ["height", "Höhe", 20, 100, 1, "Höhe der Aufnahme"],
+      ["depth", "Tiefe", 6, 35, 1, "Tiefe des Halters"],
+      ["base", "Bodenstärke", 3, 15, 0.5, "Montagefuß"]
+    ]
+  },
+  servo: {
+    title: "Servo-Halter",
+    defaults: { width: 42, depth: 24, height: 35, wall: 3, flange: 12 },
+    fields: [
+      ["width", "Innenbreite", 20, 80, 1, "Platz für den Servo"],
+      ["depth", "Innentiefe", 12, 60, 1, "Tiefe des Servos"],
+      ["height", "Höhe", 20, 80, 1, "Höhe der Seitenwände"],
+      ["wall", "Wandstärke", 2, 8, 0.5, "Materialstärke"],
+      ["flange", "Montageflansch", 5, 25, 1, "Überstand der Befestigung"]
+    ]
+  },
+  drillguide: {
+    title: "Bohrschablone",
+    defaults: { holes: 5, spacing: 32, hole: 5, width: 24, thickness: 5 },
+    fields: [
+      ["holes", "Bohrungen", 2, 12, 1, "Anzahl der Bohrungen"],
+      ["spacing", "Lochabstand", 10, 64, 1, "Abstand von Mitte zu Mitte"],
+      ["hole", "Bohrdurchmesser", 2, 15, 0.5, "Durchmesser der Führung"],
+      ["width", "Breite", 15, 60, 1, "Breite der Schablone"],
+      ["thickness", "Stärke", 3, 15, 0.5, "Führungslänge des Bohrers"]
+    ]
+  },
+  labelholder: {
+    title: "Labelhalter",
+    defaults: { width: 90, height: 35, base: 35, thickness: 3, slot: 1.2 },
+    fields: [
+      ["width", "Breite", 40, 180, 5, "Breite des Schilds"],
+      ["height", "Höhe", 20, 90, 5, "Höhe der Rückwand"],
+      ["base", "Standtiefe", 15, 80, 5, "Tiefe des Fußes"],
+      ["thickness", "Materialstärke", 1.5, 8, 0.5, "Stärke der Konstruktion"],
+      ["slot", "Schlitzbreite", 0.5, 5, 0.1, "Platz für Karte oder Schild"]
+    ]
+  },
+  magnetcup: {
+    title: "Magnetaufnahme",
+    defaults: { magnet: 10, height: 5, wall: 2, base: 2, clearance: 0.2 },
+    fields: [
+      ["magnet", "Magnetdurchmesser", 3, 40, 0.5, "Durchmesser des Rundmagneten"],
+      ["height", "Magnethöhe", 1, 15, 0.5, "Höhe des Magneten"],
+      ["wall", "Randstärke", 1, 6, 0.2, "Seitliche Materialstärke"],
+      ["base", "Bodenstärke", 0.8, 6, 0.2, "Material unter dem Magneten"],
+      ["clearance", "Pressspiel", -0.3, 0.8, 0.1, "Positiv für lockeren Sitz"]
+    ]
   }
 };
 
@@ -501,13 +609,137 @@ function shelfGeometry() {
   return g;
 }
 
+function gridbinGeometry() {
+  const { width: w, depth: d, height: h, wall, bottom } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, bottom, d), [0, bottom / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, -(d - wall) / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, (d - wall) / 2]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [-(w - wall) / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [(w - wall) / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w - 4, 3, d - 4), [0, -1.5, 0]));
+  return g;
+}
+
+function organizerGeometry() {
+  const { width: w, depth: d, height: h, wall, dividers } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, wall, d), [0, wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, -(d - wall) / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, (d - wall) / 2]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [-(w - wall) / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [(w - wall) / 2, h / 2, 0]));
+  for (let i = 1; i < dividers; i++) {
+    g.add(mesh(new THREE.BoxGeometry(wall, h * 0.72, d - wall * 2), [-w / 2 + i * w / dividers, h * 0.36, 0]));
+  }
+  return g;
+}
+
+function cablecombGeometry() {
+  const { cables, diameter, spacing, thickness, depth } = values;
+  const total = cables * diameter + (cables + 1) * spacing;
+  const shape = new THREE.Shape();
+  shape.moveTo(-total / 2, 0); shape.lineTo(total / 2, 0); shape.lineTo(total / 2, diameter + thickness); shape.lineTo(-total / 2, diameter + thickness); shape.closePath();
+  for (let i = 0; i < cables; i++) {
+    const hole = new THREE.Path();
+    hole.absarc(-total / 2 + spacing + diameter / 2 + i * (diameter + spacing), thickness + diameter / 2, diameter / 2, 0, Math.PI * 2, true);
+    shape.holes.push(hole);
+  }
+  const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 48 });
+  geometry.rotateX(-Math.PI / 2);
+  return mesh(geometry);
+}
+
+function adapterGeometry() {
+  const { diameter1, diameter2, length, wall } = values;
+  const r1 = diameter1 / 2, r2 = diameter2 / 2;
+  const points = [
+    new THREE.Vector2(r1, 0), new THREE.Vector2(r2, length),
+    new THREE.Vector2(Math.max(.5, r2 - wall), length),
+    new THREE.Vector2(Math.max(.5, r1 - wall), 0)
+  ];
+  return mesh(new THREE.LatheGeometry(points, 96), [0, 0, 0]);
+}
+
+function pipeclampGeometry() {
+  const { diameter, width, wall, foot } = values;
+  const g = new THREE.Group();
+  const radius = diameter / 2 + wall / 2;
+  const torus = new THREE.TorusGeometry(radius, wall / 2, 16, 80, Math.PI * 1.72);
+  torus.rotateY(Math.PI / 2);
+  torus.rotateX(Math.PI * 0.14);
+  g.add(mesh(torus, [0, radius + wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(foot, wall, width), [-radius, wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(foot, wall, width), [radius, wall / 2, 0]));
+  return g;
+}
+
+function bearingGeometry() {
+  const { bearing, width, height, depth, base } = values;
+  const shape = new THREE.Shape();
+  shape.moveTo(-width / 2, 0); shape.lineTo(width / 2, 0); shape.lineTo(width / 2, height); shape.lineTo(-width / 2, height); shape.closePath();
+  const hole = new THREE.Path();
+  hole.absarc(0, Math.max(bearing / 2 + base, height * .58), bearing / 2, 0, Math.PI * 2, true);
+  shape.holes.push(hole);
+  const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 72 });
+  return mesh(geometry, [0, 0, -depth / 2]);
+}
+
+function servoGeometry() {
+  const { width: w, depth: d, height: h, wall, flange } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w + wall * 2 + flange * 2, wall, d + wall * 2), [0, wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d + wall * 2), [-(w + wall) / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d + wall * 2), [(w + wall) / 2, h / 2, 0]));
+  return g;
+}
+
+function drillguideGeometry() {
+  const { holes, spacing, hole, width, thickness } = values;
+  const length = (holes - 1) * spacing + width;
+  const shape = new THREE.Shape();
+  shape.moveTo(-length / 2, -width / 2); shape.lineTo(length / 2, -width / 2); shape.lineTo(length / 2, width / 2); shape.lineTo(-length / 2, width / 2); shape.closePath();
+  for (let i = 0; i < holes; i++) {
+    const p = new THREE.Path();
+    p.absarc(-(holes - 1) * spacing / 2 + i * spacing, 0, hole / 2, 0, Math.PI * 2, true);
+    shape.holes.push(p);
+  }
+  const geometry = new THREE.ExtrudeGeometry(shape, { depth: thickness, bevelEnabled: false, curveSegments: 48 });
+  geometry.rotateX(-Math.PI / 2);
+  return mesh(geometry);
+}
+
+function labelholderGeometry() {
+  const { width: w, height: h, base, thickness: t, slot } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, t, base), [0, t / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, t), [0, h / 2, -slot / 2 - t / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, h * .35, t), [0, h * .175, slot / 2 + t / 2]));
+  return g;
+}
+
+function magnetcupGeometry() {
+  const { magnet, height, wall, base, clearance } = values;
+  const inner = Math.max(.5, (magnet + clearance) / 2);
+  const g = new THREE.Group();
+  const ring = new THREE.ExtrudeGeometry(ringShape(inner + wall, inner), { depth: height, bevelEnabled: false, curveSegments: 72 });
+  ring.rotateX(-Math.PI / 2);
+  g.add(mesh(ring));
+  g.add(mesh(new THREE.CylinderGeometry(inner + wall, inner + wall, base, 72), [0, base / 2, 0]));
+  return g;
+}
+
 const GEOMETRY_BUILDERS = {
   box: boxGeometry, cylinder: cylinderGeometry, bracket: bracketGeometry,
   lid: lidGeometry, spacer: spacerGeometry, plate: plateGeometry,
   knob: knobGeometry, clip: clipGeometry, wallmount: wallmountGeometry,
   foot: footGeometry, washer: washerGeometry, hook: hookGeometry,
   handle: handleGeometry, grommet: grommetGeometry, funnel: funnelGeometry,
-  phone: phoneGeometry, corner: cornerGeometry, shelf: shelfGeometry
+  phone: phoneGeometry, corner: cornerGeometry, shelf: shelfGeometry,
+  gridbin: gridbinGeometry, organizer: organizerGeometry, cablecomb: cablecombGeometry,
+  adapter: adapterGeometry, pipeclamp: pipeclampGeometry, bearing: bearingGeometry,
+  servo: servoGeometry, drillguide: drillguideGeometry, labelholder: labelholderGeometry,
+  magnetcup: magnetcupGeometry
 };
 
 function disposeGroup(group) {
@@ -663,6 +895,46 @@ function scadSource() {
   if (currentModel === "shelf") {
     const { width, depth, height, thickness } = values;
     return `// Formwerk Regalbodenträger — ${stamp}\nwidth=${width}; depth=${depth}; height=${height}; thickness=${thickness};\n\nunion(){ translate([0,0,height-thickness]) cube([width,depth,thickness]); cube([width,thickness,height]); hull(){ translate([width*.15,thickness,height*.15]) cube([width*.7,thickness,thickness]); translate([width*.15,depth*.72,height*.82]) cube([width*.7,thickness,thickness]); } }\n`;
+  }
+  if (currentModel === "gridbin") {
+    const { width, depth, height, wall, bottom } = values;
+    return `// Formwerk Rasterbox — ${stamp}\nwidth=${width}; depth=${depth}; height=${height}; wall=${wall}; bottom=${bottom};\n\ndifference(){ union(){ cube([width,depth,height]); translate([2,2,-3]) cube([width-4,depth-4,3]); } translate([wall,wall,bottom]) cube([width-2*wall,depth-2*wall,height]); }\n`;
+  }
+  if (currentModel === "organizer") {
+    const { width, depth, height, wall, dividers } = values;
+    return `// Formwerk Fächerbox — ${stamp}\nwidth=${width}; depth=${depth}; height=${height}; wall=${wall}; dividers=${dividers};\n\nunion(){ difference(){ cube([width,depth,height]); translate([wall,wall,wall]) cube([width-2*wall,depth-2*wall,height]); } for(i=[1:dividers-1]) translate([i*width/dividers-wall/2,wall,wall]) cube([wall,depth-2*wall,height*.72]); }\n`;
+  }
+  if (currentModel === "cablecomb") {
+    const { cables, diameter, spacing, thickness, depth } = values;
+    return `// Formwerk Kabelkamm — ${stamp}\n$fn=64; cables=${cables}; diameter=${diameter}; spacing=${spacing}; thickness=${thickness}; depth=${depth}; total=cables*diameter+(cables+1)*spacing;\n\ndifference(){ cube([total,depth,diameter+thickness]); for(i=[0:cables-1]) translate([spacing+diameter/2+i*(diameter+spacing),-0.01,thickness+diameter/2]) rotate([-90,0,0]) cylinder(d=diameter,h=depth+0.02); }\n`;
+  }
+  if (currentModel === "adapter") {
+    const { diameter1, diameter2, length, wall } = values;
+    return `// Formwerk Schlauchadapter — ${stamp}\n$fn=128; diameter1=${diameter1}; diameter2=${diameter2}; length=${length}; wall=${wall};\n\ndifference(){ cylinder(d1=diameter1,d2=diameter2,h=length); translate([0,0,-0.01]) cylinder(d1=diameter1-2*wall,d2=diameter2-2*wall,h=length+0.02); }\n`;
+  }
+  if (currentModel === "pipeclamp") {
+    const { diameter, width, wall, foot } = values;
+    return `// Formwerk Rohrschelle — ${stamp}\n$fn=96; diameter=${diameter}; width=${width}; wall=${wall}; foot=${foot};\n\ndifference(){ union(){ rotate([-90,0,0]) cylinder(d=diameter+2*wall,h=width); translate([-diameter/2-foot/2,0,-wall]) cube([foot,width,wall]); translate([diameter/2-foot/2,0,-wall]) cube([foot,width,wall]); } translate([0,-0.01,0]) rotate([-90,0,0]) cylinder(d=diameter,h=width+0.02); translate([-wall,-0.01,0]) cube([2*wall,width+0.02,diameter]); }\n`;
+  }
+  if (currentModel === "bearing") {
+    const { bearing, width, height, depth, base } = values;
+    return `// Formwerk Lagerhalter — ${stamp}\n$fn=96; bearing=${bearing}; width=${width}; height=${height}; depth=${depth}; base=${base};\n\ndifference(){ cube([width,depth,height]); translate([width/2,-0.01,max(bearing/2+base,height*.58)]) rotate([-90,0,0]) cylinder(d=bearing,h=depth+0.02); }\n`;
+  }
+  if (currentModel === "servo") {
+    const { width, depth, height, wall, flange } = values;
+    return `// Formwerk Servo-Halter — ${stamp}\nwidth=${width}; depth=${depth}; height=${height}; wall=${wall}; flange=${flange};\n\nunion(){ cube([width+2*wall+2*flange,depth+2*wall,wall]); translate([flange,0,0]) cube([wall,depth+2*wall,height]); translate([flange+width+wall,0,0]) cube([wall,depth+2*wall,height]); }\n`;
+  }
+  if (currentModel === "drillguide") {
+    const { holes, spacing, hole, width, thickness } = values;
+    return `// Formwerk Bohrschablone — ${stamp}\n$fn=64; holes=${holes}; spacing=${spacing}; hole=${hole}; width=${width}; thickness=${thickness}; length=(holes-1)*spacing+width;\n\ndifference(){ cube([length,width,thickness]); for(i=[0:holes-1]) translate([width/2+i*spacing,width/2,-0.01]) cylinder(d=hole,h=thickness+0.02); }\n`;
+  }
+  if (currentModel === "labelholder") {
+    const { width, height, base, thickness, slot } = values;
+    return `// Formwerk Labelhalter — ${stamp}\nwidth=${width}; height=${height}; base=${base}; thickness=${thickness}; slot=${slot};\n\nunion(){ cube([width,base,thickness]); cube([width,thickness,height]); translate([0,thickness+slot,0]) cube([width,thickness,height*.35]); }\n`;
+  }
+  if (currentModel === "magnetcup") {
+    const { magnet, height, wall, base, clearance } = values;
+    return `// Formwerk Magnetaufnahme — ${stamp}\n$fn=96; magnet=${magnet}; height=${height}; wall=${wall}; base=${base}; clearance=${clearance};\n\ndifference(){ cylinder(d=magnet+clearance+2*wall,h=height+base); translate([0,0,base]) cylinder(d=magnet+clearance,h=height+0.01); }\n`;
   }
   const { cable, width, wall, opening, base } = values;
   return `// Formwerk Kabelclip — ${stamp}\n$fn=96; cable=${cable}; width=${width}; wall=${wall}; opening=${opening}; base=${base};\n\nunion() {\n  cube([base,width,wall]);\n  translate([base/2,width,wall+cable/2]) rotate([90,0,0])\n    difference() {\n      cylinder(d=cable+2*wall,h=width);\n      translate([0,0,-0.01]) cylinder(d=cable,h=width+0.02);\n      translate([0,-opening/2,-0.01]) cube([cable+2*wall,opening,width+0.02]);\n    }\n}\n`;

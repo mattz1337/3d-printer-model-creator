@@ -4,7 +4,7 @@ Parametrischer 3D-Modellgenerator fuer haeufig gebrauchte 3D-Druckteile.
 
 ## Funktionen
 
-- 18 anpassbare Modellvorlagen
+- 28 anpassbare Modellvorlagen
 - Interaktive Three.js-Vorschau
 - Export als OpenSCAD (`.scad`)
 - Direkter STL-Export im Browser
@@ -31,3 +31,7 @@ Gehäuse, Hülse, Winkelhalter, Steckdeckel, Abstandshalter, Montageplatte,
 Drehknopf, Kabelclip, zweiteiliger Wandhalter, Gerätefuß, Unterlegscheibe,
 Wandhaken, Möbelgriff, Kabeldurchführung, Trichter, Handyhalter,
 Eckverbinder und Regalbodenträger.
+
+Zusaetzlich enthalten: Rasterbox, Faecherbox, Kabelkamm, Schlauchadapter,
+Rohrschelle, Lagerhalter, Servo-Halter, Bohrschablone, Labelhalter und
+Magnetaufnahme.
