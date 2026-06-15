@@ -298,6 +298,23 @@ const MODELS = {
       ["base", "Bodenstärke", 0.8, 6, 0.2, "Material unter dem Magneten"],
       ["clearance", "Pressspiel", -0.3, 0.8, 0.1, "Positiv für lockeren Sitz"]
     ]
+  },
+  kumiko: {
+    title: "Kumiko-Lampe",
+    defaults: { size: 120, height: 190, frame: 5, depth: 3, cell: 28, pattern: "asanoha" },
+    fields: [
+      ["size", "Breite", 70, 240, 5, "Außenbreite der quadratischen Lampe"],
+      ["height", "Höhe", 100, 360, 5, "Gesamthöhe der Laterne"],
+      ["frame", "Rahmenbreite", 3, 12, 0.5, "Stärke der sichtbaren Rahmenleisten"],
+      ["depth", "Materialtiefe", 1.5, 8, 0.5, "Tiefe der vier Seitenteile"],
+      ["cell", "Mustergröße", 15, 60, 1, "Abstand der Musterelemente"],
+      { key: "pattern", label: "Kumiko-Muster", help: "Stil der vier gemusterten Seiten", options: [
+        ["asanoha", "Asanoha · Stern"],
+        ["seigaiha", "Seigaiha · Wellen"],
+        ["kikko", "Kikko · Waben"],
+        ["shippo", "Shippo · Kreise"]
+      ]}
+    ]
   }
 };
 
@@ -729,6 +746,82 @@ function magnetcupGeometry() {
   return g;
 }
 
+function lineMesh(length, thickness, depth, x, y, angle = 0) {
+  return mesh(new THREE.BoxGeometry(length, thickness, depth), [x, y, 0], [0, 0, angle]);
+}
+
+function kumikoPanel(width, height, frame, depth, cell, pattern) {
+  const panel = new THREE.Group();
+  panel.add(lineMesh(width, frame, depth, 0, frame / 2));
+  panel.add(lineMesh(width, frame, depth, 0, height - frame / 2));
+  panel.add(lineMesh(height, frame, depth, -width / 2 + frame / 2, height / 2, Math.PI / 2));
+  panel.add(lineMesh(height, frame, depth, width / 2 - frame / 2, height / 2, Math.PI / 2));
+  const innerW = width - frame * 2;
+  const innerH = height - frame * 2;
+  const bar = Math.max(1.2, frame * .32);
+  const cols = Math.max(2, Math.floor(innerW / cell));
+  const rows = Math.max(3, Math.floor(innerH / cell));
+  const dx = innerW / cols, dy = innerH / rows;
+  const addLine = (x1, y1, x2, y2) => {
+    const length = Math.hypot(x2 - x1, y2 - y1);
+    panel.add(lineMesh(length, bar, depth, (x1 + x2) / 2, (y1 + y2) / 2, Math.atan2(y2 - y1, x2 - x1)));
+  };
+  if (pattern === "kikko") {
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const cx = -innerW / 2 + dx / 2 + c * dx + (r % 2 ? dx / 2 : 0);
+      const cy = frame + dy / 2 + r * dy;
+      const radius = Math.min(dx, dy) * .48;
+      const pts = Array.from({ length: 6 }, (_, i) => [cx + Math.cos(i * Math.PI / 3) * radius, cy + Math.sin(i * Math.PI / 3) * radius]);
+      pts.forEach((p, i) => addLine(...p, ...pts[(i + 1) % 6]));
+    }
+  } else if (pattern === "shippo" || pattern === "seigaiha") {
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const cx = -innerW / 2 + dx / 2 + c * dx;
+      const cy = frame + dy / 2 + r * dy;
+      const radius = Math.min(dx, dy) * .43;
+      const start = pattern === "shippo" ? 0 : 0;
+      const end = pattern === "shippo" ? Math.PI * 2 : Math.PI;
+      const curve = new THREE.EllipseCurve(cx, cy, radius, radius, start, end, false, 0);
+      const geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curve.getPoints(18).map(p => new THREE.Vector3(p.x, p.y, 0))), 18, bar / 2, 6, false);
+      panel.add(mesh(geometry));
+    }
+  } else {
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const x0 = -innerW / 2 + c * dx, y0 = frame + r * dy;
+      const cx = x0 + dx / 2, cy = y0 + dy / 2;
+      addLine(x0, y0, x0 + dx, y0 + dy);
+      addLine(x0 + dx, y0, x0, y0 + dy);
+      addLine(cx, y0, cx, y0 + dy);
+      addLine(x0, cy, x0 + dx, cy);
+    }
+  }
+  return panel;
+}
+
+function kumikoGeometry() {
+  const { size, height, frame, depth, cell, pattern } = values;
+  const g = new THREE.Group();
+  const panelDefs = [
+    [[0, 0, -size / 2], [0, 0, 0]],
+    [[0, 0, size / 2], [0, Math.PI, 0]],
+    [[-size / 2, 0, 0], [0, Math.PI / 2, 0]],
+    [[size / 2, 0, 0], [0, -Math.PI / 2, 0]]
+  ];
+  panelDefs.forEach(([position, rotation]) => {
+    const panel = kumikoPanel(size, height, frame, depth, cell, pattern);
+    panel.position.set(...position);
+    panel.rotation.set(...rotation);
+    g.add(panel);
+  });
+  [frame / 2, height - frame / 2].forEach(y => {
+    g.add(mesh(new THREE.BoxGeometry(size + frame, frame, frame), [0, y, -size / 2]));
+    g.add(mesh(new THREE.BoxGeometry(size + frame, frame, frame), [0, y, size / 2]));
+    g.add(mesh(new THREE.BoxGeometry(frame, frame, size - frame), [-size / 2, y, 0]));
+    g.add(mesh(new THREE.BoxGeometry(frame, frame, size - frame), [size / 2, y, 0]));
+  });
+  return g;
+}
+
 const GEOMETRY_BUILDERS = {
   box: boxGeometry, cylinder: cylinderGeometry, bracket: bracketGeometry,
   lid: lidGeometry, spacer: spacerGeometry, plate: plateGeometry,
@@ -739,7 +832,7 @@ const GEOMETRY_BUILDERS = {
   gridbin: gridbinGeometry, organizer: organizerGeometry, cablecomb: cablecombGeometry,
   adapter: adapterGeometry, pipeclamp: pipeclampGeometry, bearing: bearingGeometry,
   servo: servoGeometry, drillguide: drillguideGeometry, labelholder: labelholderGeometry,
-  magnetcup: magnetcupGeometry
+  magnetcup: magnetcupGeometry, kumiko: kumikoGeometry
 };
 
 function disposeGroup(group) {
@@ -758,7 +851,21 @@ function updateModel() {
 function renderForm() {
   const form = document.querySelector("#parameter-form");
   form.innerHTML = "";
-  MODELS[currentModel].fields.forEach(([key, label, min, max, step, help]) => {
+  MODELS[currentModel].fields.forEach(fieldConfig => {
+    if (!Array.isArray(fieldConfig)) {
+      const field = document.createElement("div");
+      field.className = "field";
+      field.innerHTML = `<div class="field-head"><label for="${fieldConfig.key}">${fieldConfig.label}</label></div>
+        <select class="select-input" id="${fieldConfig.key}">${fieldConfig.options.map(([value, label]) => `<option value="${value}" ${values[fieldConfig.key] === value ? "selected" : ""}>${label}</option>`).join("")}</select>
+        <p class="field-help">${fieldConfig.help}</p>`;
+      field.querySelector("select").addEventListener("change", e => {
+        values[fieldConfig.key] = e.target.value;
+        updateModel();
+      });
+      form.appendChild(field);
+      return;
+    }
+    const [key, label, min, max, step, help] = fieldConfig;
     const percent = ((values[key] - min) / (max - min)) * 100;
     const field = document.createElement("div");
     field.className = "field";
@@ -935,6 +1042,10 @@ function scadSource() {
   if (currentModel === "magnetcup") {
     const { magnet, height, wall, base, clearance } = values;
     return `// Formwerk Magnetaufnahme — ${stamp}\n$fn=96; magnet=${magnet}; height=${height}; wall=${wall}; base=${base}; clearance=${clearance};\n\ndifference(){ cylinder(d=magnet+clearance+2*wall,h=height+base); translate([0,0,base]) cylinder(d=magnet+clearance,h=height+0.01); }\n`;
+  }
+  if (currentModel === "kumiko") {
+    const { size, height, frame, depth, cell, pattern } = values;
+    return `// Formwerk Kumiko-Lampe — ${stamp}\n// Muster: ${pattern}\nsize=${size}; height=${height}; frame=${frame}; depth=${depth}; cell=${cell}; bar=max(1.2,frame*.32);\n\nmodule line2d(p1,p2,w=bar){ hull(){ translate(p1) circle(d=w,$fn=12); translate(p2) circle(d=w,$fn=12); } }\nmodule pattern2d(){\n  cols=floor((size-2*frame)/cell); rows=floor((height-2*frame)/cell); dx=(size-2*frame)/cols; dy=(height-2*frame)/rows;\n  ${pattern === "asanoha" ? `for(r=[0:rows-1],c=[0:cols-1]) let(x=frame+c*dx,y=frame+r*dy) { line2d([x,y],[x+dx,y+dy]); line2d([x+dx,y],[x,y+dy]); line2d([x+dx/2,y],[x+dx/2,y+dy]); line2d([x,y+dy/2],[x+dx,y+dy/2]); }` : pattern === "kikko" ? `for(r=[0:rows-1],c=[0:cols-1]) let(x=frame+dx/2+c*dx+(r%2)*dx/2,y=frame+dy/2+r*dy,rad=min(dx,dy)*.48) for(a=[0:60:300]) line2d([x+cos(a)*rad,y+sin(a)*rad],[x+cos(a+60)*rad,y+sin(a+60)*rad]);` : `for(r=[0:rows],c=[0:cols]) translate([frame+c*dx,frame+r*dy]) difference(){ circle(r=min(dx,dy)*.5,$fn=32); circle(r=min(dx,dy)*.5-bar,$fn=32); }`}\n}\nmodule panel(){ linear_extrude(depth) union(){ difference(){ square([size,height]); translate([frame,frame]) square([size-2*frame,height-2*frame]); } pattern2d(); } }\n\n// Vier Seitenteile flach angeordnet, anschließend zusammenkleben\nfor(i=[0:3]) translate([i*(size+10),0,0]) panel();\n// Ober- und Unterrahmen\ntranslate([0,height+10,0]) linear_extrude(frame) difference(){ square([size,size]); translate([frame,frame]) square([size-2*frame,size-2*frame]); }\ntranslate([size+10,height+10,0]) linear_extrude(frame) difference(){ square([size,size]); translate([frame,frame]) square([size-2*frame,size-2*frame]); }\n`;
   }
   const { cable, width, wall, opening, base } = values;
   return `// Formwerk Kabelclip — ${stamp}\n$fn=96; cable=${cable}; width=${width}; wall=${wall}; opening=${opening}; base=${base};\n\nunion() {\n  cube([base,width,wall]);\n  translate([base/2,width,wall+cable/2]) rotate([90,0,0])\n    difference() {\n      cylinder(d=cable+2*wall,h=width);\n      translate([0,0,-0.01]) cylinder(d=cable,h=width+0.02);\n      translate([0,-opening/2,-0.01]) cube([cable+2*wall,opening,width+0.02]);\n    }\n}\n`;

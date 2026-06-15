@@ -4,7 +4,7 @@ Parametrischer 3D-Modellgenerator fuer haeufig gebrauchte 3D-Druckteile.
 
 ## Funktionen
 
-- 28 anpassbare Modellvorlagen
+- 29 anpassbare Modellvorlagen
 - Interaktive Three.js-Vorschau
 - Export als OpenSCAD (`.scad`)
 - Direkter STL-Export im Browser
@@ -35,3 +35,6 @@ Eckverbinder und Regalbodenträger.
 Zusaetzlich enthalten: Rasterbox, Faecherbox, Kabelkamm, Schlauchadapter,
 Rohrschelle, Lagerhalter, Servo-Halter, Bohrschablone, Labelhalter und
 Magnetaufnahme.
+
+Die Kumiko-Lampe erzeugt eine quadratische Laterne mit waehlbaren
+Asanoha-, Seigaiha-, Kikko- und Shippo-Mustern.
