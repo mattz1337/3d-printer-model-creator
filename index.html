@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101412" />
+    <title>Formwerk — Parametric 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <a class="brand" href="#">
+          <span class="brand-mark">
+            <span></span><span></span><span></span>
+          </span>
+          <span>FORMWERK</span>
+          <small>PARAMETRIC 3D</small>
+        </a>
+        <div class="top-status">
+          <span class="status-dot"></span>
+          <span>Modell bereit</span>
+          <span class="divider"></span>
+          <span id="top-dimensions">80 × 60 × 24 mm</span>
+        </div>
+        <button class="ghost-button" id="reset-view">Ansicht zentrieren</button>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar">
+          <section class="sidebar-head">
+            <p class="eyebrow">01 / Grundkörper</p>
+            <h1>Was möchtest<br>du bauen?</h1>
+            <p class="intro">Wähle eine Form und passe sie millimetergenau an.</p>
+          </section>
+
+          <nav class="model-list" id="model-list">
+            <button class="model-card active" data-model="box">
+              <span class="model-icon box-icon"></span>
+              <span><strong>Gehäuse</strong><small>Offene Box mit Wänden</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="cylinder">
+              <span class="model-icon cylinder-icon"></span>
+              <span><strong>Hülse</strong><small>Rohr oder massiver Zylinder</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="bracket">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Winkelhalter</strong><small>L-Profil mit Bohrungen</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="lid">
+              <span class="model-icon lid-icon"></span>
+              <span><strong>Steckdeckel</strong><small>Deckel mit passendem Rand</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="spacer">
+              <span class="model-icon spacer-icon"></span>
+              <span><strong>Abstandshalter</strong><small>Hülse für Schrauben</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="plate">
+              <span class="model-icon plate-icon"></span>
+              <span><strong>Montageplatte</strong><small>Platte mit vier Bohrungen</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="knob">
+              <span class="model-icon knob-icon"></span>
+              <span><strong>Drehknopf</strong><small>Gerändelter Bedienknopf</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="clip">
+              <span class="model-icon clip-icon"></span>
+              <span><strong>Kabelclip</strong><small>Offener Clip zum Anschrauben</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="wallmount">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Wandhalter, 2-teilig</strong><small>Steckschiene mit Wandplatte</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="foot">
+              <span class="model-icon spacer-icon"></span>
+              <span><strong>Gerätefuß</strong><small>Fuß mit Schraubenbohrung</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="washer">
+              <span class="model-icon spacer-icon"></span>
+              <span><strong>Unterlegscheibe</strong><small>Passgenaue Distanzscheibe</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="hook">
+              <span class="model-icon clip-icon"></span>
+              <span><strong>Wandhaken</strong><small>Haken mit Montageplatte</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="handle">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Möbelgriff</strong><small>Griff mit zwei Füßen</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="grommet">
+              <span class="model-icon spacer-icon"></span>
+              <span><strong>Kabeldurchführung</strong><small>Ring für Tischbohrungen</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="funnel">
+              <span class="model-icon cylinder-icon"></span>
+              <span><strong>Trichter</strong><small>Trichter mit Auslauf</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="phone">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Handyhalter</strong><small>Geneigter Tischständer</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="corner">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Eckverbinder</strong><small>Verstärkter 90°-Winkel</small></span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="model-card" data-model="shelf">
+              <span class="model-icon bracket-icon"></span>
+              <span><strong>Regalbodenträger</strong><small>Träger mit Wandplatte</small></span>
+              <span class="arrow">↗</span>
+            </button>
+          </nav>
+
+          <section class="sidebar-note">
+            <span>i</span>
+            <p>Alle Maße sind in Millimetern. STL-Dateien werden direkt lokal erzeugt.</p>
+          </section>
+        </aside>
+
+        <section class="viewport-panel">
+          <div class="viewport-toolbar">
+            <div>
+              <p class="eyebrow">Live Vorschau</p>
+              <h2 id="model-title">Gehäuse</h2>
+            </div>
+            <div class="view-actions">
+              <button class="icon-button active" title="Perspektive">◇</button>
+              <button class="icon-button" id="toggle-grid" title="Raster ein-/ausblenden">#</button>
+            </div>
+          </div>
+          <div id="viewport">
+            <div class="axis-label axis-x">X</div>
+            <div class="axis-label axis-y">Y</div>
+            <div class="axis-label axis-z">Z</div>
+            <div class="viewport-hint">Ziehen zum Drehen · Scrollen zum Zoomen</div>
+          </div>
+          <div class="viewport-footer">
+            <span><b id="triangle-count">0</b> Dreiecke</span>
+            <span><b id="volume">0</b> cm³ Volumen</span>
+            <span class="quality"><i></i> Druckbar</span>
+          </div>
+        </section>
+
+        <aside class="parameters">
+          <div class="parameters-head">
+            <p class="eyebrow">02 / Parameter</p>
+            <h2>Abmessungen</h2>
+            <button class="text-button" id="reset-params">Zurücksetzen</button>
+          </div>
+          <div id="parameter-form" class="parameter-form"></div>
+
+          <section class="export-panel">
+            <div class="export-head">
+              <div>
+                <p class="eyebrow">03 / Export</p>
+                <h2>Bereit zum Drucken</h2>
+              </div>
+              <span class="check">✓</span>
+            </div>
+            <button class="primary-button" id="export-stl">
+              <span>STL herunterladen</span>
+              <small>Für deinen Slicer</small>
+              <b>↓</b>
+            </button>
+            <button class="secondary-button" id="export-scad">
+              <span>OpenSCAD-Datei</span>
+              <b>.SCAD</b>
+            </button>
+          </section>
+        </aside>
+      </main>
+      <div class="toast" id="toast"></div>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
