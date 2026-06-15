@@ -37,4 +37,5 @@ Rohrschelle, Lagerhalter, Servo-Halter, Bohrschablone, Labelhalter und
 Magnetaufnahme.
 
 Die Kumiko-Lampe erzeugt eine quadratische Laterne mit waehlbaren
-Asanoha-, Seigaiha-, Kikko- und Shippo-Mustern.
+Asanoha-, Seigaiha-, Kikko- und Shippo-Mustern. Boden und Deckel koennen
+unabhaengig ein- oder ausgeschaltet werden.
