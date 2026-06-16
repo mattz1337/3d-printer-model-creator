@@ -989,11 +989,20 @@ function hingeboxGeometry() {
   const g = new THREE.Group();
   g.add(mesh(new THREE.BoxGeometry(w, wall, d), [0, wall / 2, 0]));
   g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, -d / 2 + wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, d / 2 - wall / 2]));
   g.add(mesh(new THREE.BoxGeometry(wall, h, d), [-w / 2 + wall / 2, h / 2, 0]));
   g.add(mesh(new THREE.BoxGeometry(wall, h, d), [w / 2 - wall / 2, h / 2, 0]));
-  g.add(mesh(new THREE.BoxGeometry(w, lid, d), [0, h + lid / 2 + 10, d * .35], [-0.55, 0, 0]));
-  for (let i = -1; i <= 1; i++) g.add(mesh(new THREE.CylinderGeometry(hinge / 2, hinge / 2, w / 5, 24), [i * w / 4, h + hinge / 2, -d / 2], [0, 0, Math.PI / 2]));
-  g.add(mesh(new THREE.BoxGeometry(w * .28, wall * 2, wall * 2), [0, h * .65, d / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w * .28, wall * 1.8, wall * 2), [0, h * .72, d / 2 + wall / 2]));
+
+  const lidZ = -d - hinge * 1.4;
+  g.add(mesh(new THREE.BoxGeometry(w, lid, d), [0, h + lid / 2, lidZ]));
+  g.add(mesh(new THREE.BoxGeometry(w - wall * 4, wall, d - wall * 4), [0, h - wall / 2, lidZ]));
+  g.add(mesh(new THREE.BoxGeometry(w * .22, wall * 1.8, wall * 2), [0, h + lid + wall, lidZ + d / 2 + wall / 2]));
+
+  [-0.32, 0.32].forEach(x => {
+    g.add(mesh(new THREE.CylinderGeometry(hinge / 2, hinge / 2, w * .28, 24), [x * w, h + hinge / 2, -d / 2], [0, 0, Math.PI / 2]));
+  });
+  g.add(mesh(new THREE.CylinderGeometry(hinge / 2, hinge / 2, w * .34, 24), [0, h + hinge / 2, lidZ + d / 2], [0, 0, Math.PI / 2]));
   return g;
 }
 
@@ -1263,7 +1272,7 @@ function scadSource() {
   }
   if (currentModel === "hingebox") {
     const { width, depth, height, wall, lid, hinge } = values;
-    return `// Formwerk Scharnierbox — ${stamp}\n$fn=32; width=${width}; depth=${depth}; height=${height}; wall=${wall}; lid=${lid}; hinge=${hinge};\n\ndifference(){ cube([width,depth,height]); translate([wall,wall,wall]) cube([width-2*wall,depth-2*wall,height]); }\ntranslate([0,depth+12,0]) cube([width,depth,lid]);\nfor(x=[width*.25,width*.5,width*.75]) translate([x,-hinge/2,height]) rotate([0,90,0]) cylinder(d=hinge,h=width/6,center=true);\ntranslate([width*.36,depth-wall,height*.55]) cube([width*.28,wall*2,wall*2]);\n`;
+    return `// Formwerk Scharnierbox — ${stamp}\n$fn=32; width=${width}; depth=${depth}; height=${height}; wall=${wall}; lid=${lid}; hinge=${hinge};\n\n// Box-Unterteil\ndifference(){ cube([width,depth,height]); translate([wall,wall,wall]) cube([width-2*wall,depth-2*wall,height]); }\ntranslate([width*.36,depth,height*.72]) cube([width*.28,wall*1.8,wall*2]);\nfor(x=[width*.18,width*.68]) translate([x,-hinge/2,height]) rotate([0,90,0]) cylinder(d=hinge,h=width*.28);\n\n// Deckel separat dahinter, offen dargestellt\ntranslate([0,-depth-hinge*1.4,height]) union(){ cube([width,depth,lid]); translate([wall*2,wall*2,-wall]) cube([width-4*wall,depth-4*wall,wall]); translate([width*.39,depth,lid]) cube([width*.22,wall*1.8,wall*2]); translate([width*.33,depth+hinge*.9,0]) rotate([0,90,0]) cylinder(d=hinge,h=width*.34); }\n`;
   }
   const { cable, width, wall, opening, base } = values;
   return `// Formwerk Kabelclip — ${stamp}\n$fn=96; cable=${cable}; width=${width}; wall=${wall}; opening=${opening}; base=${base};\n\nunion() {\n  cube([base,width,wall]);\n  translate([base/2,width,wall+cable/2]) rotate([90,0,0])\n    difference() {\n      cylinder(d=cable+2*wall,h=width);\n      translate([0,0,-0.01]) cylinder(d=cable,h=width+0.02);\n      translate([0,-opening/2,-0.01]) cube([cable+2*wall,opening,width+0.02]);\n    }\n}\n`;
