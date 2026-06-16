@@ -4,7 +4,7 @@ Parametrischer 3D-Modellgenerator fuer haeufig gebrauchte 3D-Druckteile.
 
 ## Funktionen
 
-- 29 anpassbare Modellvorlagen
+- 34 anpassbare Modellvorlagen
 - Interaktive Three.js-Vorschau
 - Export als OpenSCAD (`.scad`)
 - Direkter STL-Export im Browser
@@ -39,3 +39,6 @@ Magnetaufnahme.
 Die Kumiko-Lampe erzeugt eine quadratische Laterne mit waehlbaren
 Asanoha-, Seigaiha-, Kikko- und Shippo-Mustern. Boden und Deckel koennen
 unabhaengig ein- oder ausgeschaltet werden.
+
+Neu hinzugekommen sind MakerWorld-inspirierte Helfer: Gridfinity-Einsatz,
+Elektronikgehaeuse, modulares Lampenpanel, Batteriehalter und Scharnierbox.

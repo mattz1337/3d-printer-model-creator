@@ -317,6 +317,75 @@ const MODELS = {
       { key: "bottom", label: "Boden", help: "Geschlossene Bodenplatte mitdrucken", type: "toggle" },
       { key: "top", label: "Deckel", help: "Geschlossene Deckelplatte mitdrucken", type: "toggle" }
     ]
+  },
+  gridinsert: {
+    title: "Gridfinity-Einsatz",
+    defaults: { cols: 2, rows: 1, height: 35, kind: "bits", holes: 8 },
+    fields: [
+      ["cols", "Rasterbreite", 1, 5, 1, "Breite in 42-mm-Zellen"],
+      ["rows", "Rastertiefe", 1, 4, 1, "Tiefe in 42-mm-Zellen"],
+      ["height", "Höhe", 18, 90, 5, "Gesamthöhe des Einsatzes"],
+      ["holes", "Plätze", 2, 24, 1, "Anzahl der Aufnahmen"],
+      { key: "kind", label: "Einsatztyp", help: "Welche Aufnahme erzeugt wird", options: [
+        ["bits", "Bits · 1/4 Zoll"],
+        ["nozzles", "Düsen · M6"],
+        ["cards", "SD-Karten"]
+      ]}
+    ]
+  },
+  electronics: {
+    title: "Elektronikgehäuse",
+    defaults: { width: 90, depth: 60, height: 28, wall: 2.4, vents: true, bosses: true },
+    fields: [
+      ["width", "Breite", 45, 180, 5, "Innennahe Gehäusebreite"],
+      ["depth", "Tiefe", 35, 140, 5, "Innennahe Gehäusetiefe"],
+      ["height", "Höhe", 14, 70, 2, "Gehäusehöhe"],
+      ["wall", "Wandstärke", 1.2, 5, 0.2, "Materialstärke"],
+      { key: "vents", label: "Lüftung", help: "Seitliche Lüftungsschlitze einfügen", type: "toggle" },
+      { key: "bosses", label: "Schraubdome", help: "Vier Innen-Dome für Platinen", type: "toggle" }
+    ]
+  },
+  lamppanel: {
+    title: "Lampenpanel",
+    defaults: { width: 120, height: 160, frame: 5, depth: 3, pattern: "holes", density: 7 },
+    fields: [
+      ["width", "Breite", 60, 240, 5, "Panelbreite"],
+      ["height", "Höhe", 80, 320, 5, "Panelhöhe"],
+      ["frame", "Rahmen", 3, 12, 0.5, "Rahmenbreite"],
+      ["depth", "Tiefe", 1.5, 8, 0.5, "Materialtiefe"],
+      ["density", "Dichte", 3, 14, 1, "Anzahl der Musterspalten"],
+      { key: "pattern", label: "Muster", help: "Durchbruchmuster des Panels", options: [
+        ["holes", "Lochfeld"],
+        ["waves", "Wellen"],
+        ["diagonal", "Diagonalrippen"]
+      ]}
+    ]
+  },
+  batteryholder: {
+    title: "Batteriehalter",
+    defaults: { cells: 6, type: "aa", wall: 2, height: 24 },
+    fields: [
+      ["cells", "Zellen", 2, 12, 1, "Anzahl der Batterien"],
+      ["wall", "Wandstärke", 1.2, 5, 0.2, "Material zwischen den Zellen"],
+      ["height", "Höhe", 10, 60, 2, "Höhe des Organizers"],
+      { key: "type", label: "Batterietyp", help: "Durchmesser der Aufnahme", options: [
+        ["aaa", "AAA"],
+        ["aa", "AA"],
+        ["18650", "18650"]
+      ]}
+    ]
+  },
+  hingebox: {
+    title: "Scharnierbox",
+    defaults: { width: 85, depth: 55, height: 30, wall: 2, lid: 4, hinge: 8 },
+    fields: [
+      ["width", "Breite", 40, 180, 5, "Außenbreite"],
+      ["depth", "Tiefe", 30, 140, 5, "Außentiefe"],
+      ["height", "Boxhöhe", 18, 80, 2, "Höhe des Unterteils"],
+      ["wall", "Wandstärke", 1.2, 5, 0.2, "Materialstärke"],
+      ["lid", "Deckelstärke", 2, 10, 0.5, "Stärke des Deckels"],
+      ["hinge", "Scharnierrolle", 4, 16, 0.5, "Durchmesser der Scharnierrollen"]
+    ]
   }
 };
 
@@ -842,6 +911,92 @@ function kumikoGeometry() {
   return g;
 }
 
+function gridinsertGeometry() {
+  const { cols, rows, height, kind, holes } = values;
+  const w = cols * 42, d = rows * 42, wall = 2.2;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, 3, d), [0, 1.5, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, height, wall), [0, height / 2, -d / 2 + wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, height, wall), [0, height / 2, d / 2 - wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(wall, height, d), [-w / 2 + wall / 2, height / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, height, d), [w / 2 - wall / 2, height / 2, 0]));
+  const dia = kind === "bits" ? 7 : kind === "nozzles" ? 8.5 : 2.8;
+  const count = Math.min(holes, 24);
+  for (let i = 0; i < count; i++) {
+    const x = -w / 2 + 12 + (i % Math.max(1, Math.floor(w / 14))) * 14;
+    const z = -d / 2 + 14 + Math.floor(i / Math.max(1, Math.floor(w / 14))) * 14;
+    if (z > d / 2 - 10) break;
+    if (kind === "cards") g.add(mesh(new THREE.BoxGeometry(10, height * .5, dia), [x, height * .45, z]));
+    else g.add(mesh(new THREE.CylinderGeometry(dia / 2, dia / 2, height * .45, 32), [x, height * .78, z], [0, 0, 0]));
+  }
+  return g;
+}
+
+function electronicsGeometry() {
+  const { width: w, depth: d, height: h, wall, vents, bosses } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, wall, d), [0, wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, -d / 2 + wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, d / 2 - wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [-w / 2 + wall / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [w / 2 - wall / 2, h / 2, 0]));
+  if (bosses) [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([x,z]) => {
+    g.add(mesh(new THREE.CylinderGeometry(3.8, 3.8, h * .45, 32), [x * (w / 2 - 12), wall + h * .225, z * (d / 2 - 12)]));
+    g.add(mesh(new THREE.CylinderGeometry(1.3, 1.3, h * .47, 24), [x * (w / 2 - 12), wall + h * .235, z * (d / 2 - 12)]));
+  });
+  if (vents) for (let i = -2; i <= 2; i++) g.add(mesh(new THREE.BoxGeometry(18, 1.2, wall * 1.4), [i * 12, h * .7, d / 2]));
+  return g;
+}
+
+function lamppanelGeometry() {
+  const { width: w, height: h, frame, depth, pattern, density } = values;
+  const g = new THREE.Group();
+  g.add(lineMesh(w, frame, depth, 0, frame / 2));
+  g.add(lineMesh(w, frame, depth, 0, h - frame / 2));
+  g.add(lineMesh(h, frame, depth, -w / 2 + frame / 2, h / 2, Math.PI / 2));
+  g.add(lineMesh(h, frame, depth, w / 2 - frame / 2, h / 2, Math.PI / 2));
+  const innerW = w - 2 * frame, step = innerW / density;
+  for (let i = 0; i <= density; i++) {
+    const x = -innerW / 2 + i * step;
+    if (pattern === "diagonal") {
+      g.add(lineMesh(Math.hypot(step, h - 2 * frame), 1.8, depth, x, h / 2, Math.atan2(h - 2 * frame, step)));
+    } else if (pattern === "waves") {
+      const curve = new THREE.CatmullRomCurve3(Array.from({ length: 8 }, (_, n) => new THREE.Vector3(x + Math.sin(n) * step * .25, frame + n * (h - 2 * frame) / 7, 0)));
+      g.add(mesh(new THREE.TubeGeometry(curve, 32, .9, 6, false)));
+    } else {
+      for (let y = frame + step / 2; y < h - frame; y += step) g.add(mesh(new THREE.CylinderGeometry(step * .28, step * .28, depth, 32), [x, y, 0], [Math.PI / 2, 0, 0]));
+    }
+  }
+  return g;
+}
+
+function batteryholderGeometry() {
+  const { cells, type, wall, height } = values;
+  const dia = type === "aaa" ? 11 : type === "18650" ? 18.8 : 14.5;
+  const pitch = dia + wall;
+  const w = cells * pitch + wall, d = dia + wall * 2;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, wall, d), [0, wall / 2, 0]));
+  for (let i = 0; i < cells; i++) {
+    const x = -w / 2 + wall + dia / 2 + i * pitch;
+    g.add(mesh(new THREE.CylinderGeometry(dia / 2 + wall / 2, dia / 2 + wall / 2, height, 36, 1, true), [x, height / 2, 0], [0, 0, 0]));
+  }
+  return g;
+}
+
+function hingeboxGeometry() {
+  const { width: w, depth: d, height: h, wall, lid, hinge } = values;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, wall, d), [0, wall / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, h, wall), [0, h / 2, -d / 2 + wall / 2]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [-w / 2 + wall / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(wall, h, d), [w / 2 - wall / 2, h / 2, 0]));
+  g.add(mesh(new THREE.BoxGeometry(w, lid, d), [0, h + lid / 2 + 10, d * .35], [-0.55, 0, 0]));
+  for (let i = -1; i <= 1; i++) g.add(mesh(new THREE.CylinderGeometry(hinge / 2, hinge / 2, w / 5, 24), [i * w / 4, h + hinge / 2, -d / 2], [0, 0, Math.PI / 2]));
+  g.add(mesh(new THREE.BoxGeometry(w * .28, wall * 2, wall * 2), [0, h * .65, d / 2]));
+  return g;
+}
+
 const GEOMETRY_BUILDERS = {
   box: boxGeometry, cylinder: cylinderGeometry, bracket: bracketGeometry,
   lid: lidGeometry, spacer: spacerGeometry, plate: plateGeometry,
@@ -852,7 +1007,10 @@ const GEOMETRY_BUILDERS = {
   gridbin: gridbinGeometry, organizer: organizerGeometry, cablecomb: cablecombGeometry,
   adapter: adapterGeometry, pipeclamp: pipeclampGeometry, bearing: bearingGeometry,
   servo: servoGeometry, drillguide: drillguideGeometry, labelholder: labelholderGeometry,
-  magnetcup: magnetcupGeometry, kumiko: kumikoGeometry
+  magnetcup: magnetcupGeometry, kumiko: kumikoGeometry,
+  gridinsert: gridinsertGeometry, electronics: electronicsGeometry,
+  lamppanel: lamppanelGeometry, batteryholder: batteryholderGeometry,
+  hingebox: hingeboxGeometry
 };
 
 function disposeGroup(group) {
@@ -1084,6 +1242,28 @@ function scadSource() {
           ? `for(r=[0:rows-1],c=[0:cols-1]) let(x=frame+c*dx,y=frame+(r+1)*dy) { line2d([x,y],[x+dx,y]); line2d([x+dx/2,y-dy],[x+dx/2,y]); translate([x+dx/2,y]) difference(){ circle(r=min(dx,dy)*.45,$fn=32); circle(r=min(dx,dy)*.45-bar,$fn=32); translate([-dx,-dy]) square([2*dx,dy]); } }`
           : `for(r=[0:rows-1],c=[0:cols-1]) let(x=frame+dx/2+c*dx,y=frame+dy/2+r*dy,rad=min(dx,dy)*.43) { translate([x,y]) difference(){ circle(r=rad,$fn=32); circle(r=rad-bar,$fn=32); } line2d([x-dx/2,y],[x+dx/2,y]); line2d([x,y-dy/2],[x,y+dy/2]); }`;
     return `// Formwerk Kumiko-Lampe — ${stamp}\n// Muster: ${pattern}\nsize=${size}; height=${height}; frame=${frame}; depth=${depth}; cell=${cell}; bar=max(1.2,frame*.32); bottom=${bottom}; top=${top};\n\nmodule line2d(p1,p2,w=bar){ hull(){ translate(p1) circle(d=w,$fn=12); translate(p2) circle(d=w,$fn=12); } }\nmodule pattern2d(){\n  cols=floor((size-2*frame)/cell); rows=floor((height-2*frame)/cell); dx=(size-2*frame)/cols; dy=(height-2*frame)/rows;\n  ${patternScad}\n}\nmodule panel(){ linear_extrude(depth) union(){ difference(){ square([size,height]); translate([frame,frame]) square([size-2*frame,height-2*frame]); } pattern2d(); } }\n\n// Vier Seitenteile flach angeordnet, anschließend zusammenkleben\nfor(i=[0:3]) translate([i*(size+10),0,0]) panel();\n// Ober- und Unterrahmen\ntranslate([0,height+10,0]) linear_extrude(frame) difference(){ square([size,size]); translate([frame,frame]) square([size-2*frame,size-2*frame]); }\ntranslate([size+10,height+10,0]) linear_extrude(frame) difference(){ square([size,size]); translate([frame,frame]) square([size-2*frame,size-2*frame]); }\nif(bottom) translate([2*(size+10),height+10,0]) cube([size-2*frame,size-2*frame,depth]);\nif(top) translate([3*(size+10),height+10,0]) cube([size-2*frame,size-2*frame,depth]);\n`;
+  }
+  if (currentModel === "gridinsert") {
+    const { cols, rows, height, kind, holes } = values;
+    const dia = kind === "bits" ? 7 : kind === "nozzles" ? 8.5 : 2.8;
+    return `// Formwerk Gridfinity-Einsatz — ${stamp}\ncols=${cols}; rows=${rows}; height=${height}; holes=${holes}; dia=${dia}; kind="${kind}"; wall=2.2; w=cols*42; d=rows*42;\n\ndifference(){ cube([w,d,height]); translate([wall,wall,3]) cube([w-2*wall,d-2*wall,height]); }\nfor(i=[0:holes-1]) translate([12+(i%floor(w/14))*14,14+floor(i/floor(w/14))*14,height*.55]) ${kind === "cards" ? `cube([10,dia,height*.5],center=true);` : `cylinder(d=dia,h=height*.45,$fn=32);`}\n`;
+  }
+  if (currentModel === "electronics") {
+    const { width, depth, height, wall, vents, bosses } = values;
+    return `// Formwerk Elektronikgehäuse — ${stamp}\n$fn=48; width=${width}; depth=${depth}; height=${height}; wall=${wall}; vents=${vents}; bosses=${bosses};\n\nunion(){ difference(){ cube([width,depth,height]); translate([wall,wall,wall]) cube([width-2*wall,depth-2*wall,height]); } if(bosses) for(x=[12,width-12],y=[12,depth-12]) translate([x,y,wall]) cylinder(d=7.6,h=height*.45); }\n`;
+  }
+  if (currentModel === "lamppanel") {
+    const { width, height, frame, depth, pattern, density } = values;
+    return `// Formwerk modulares Lampenpanel — ${stamp}\nwidth=${width}; height=${height}; frame=${frame}; depth=${depth}; density=${density}; pattern="${pattern}";\n\nlinear_extrude(depth) difference(){ square([width,height]); translate([frame,frame]) square([width-2*frame,height-2*frame]); }\n// Muster wird in der App als druckbare Leisten erzeugt; fuer OpenSCAD bitte als Stilhinweis nutzen: ${pattern}\n`;
+  }
+  if (currentModel === "batteryholder") {
+    const { cells, type, wall, height } = values;
+    const dia = type === "aaa" ? 11 : type === "18650" ? 18.8 : 14.5;
+    return `// Formwerk Batteriehalter — ${stamp}\n$fn=64; cells=${cells}; dia=${dia}; wall=${wall}; height=${height}; pitch=dia+wall;\n\ncube([cells*pitch+wall,dia+2*wall,wall]);\nfor(i=[0:cells-1]) translate([wall+dia/2+i*pitch,dia/2+wall,wall]) difference(){ cylinder(d=dia+wall,h=height); translate([0,0,-0.01]) cylinder(d=dia,h=height+0.02); }\n`;
+  }
+  if (currentModel === "hingebox") {
+    const { width, depth, height, wall, lid, hinge } = values;
+    return `// Formwerk Scharnierbox — ${stamp}\n$fn=32; width=${width}; depth=${depth}; height=${height}; wall=${wall}; lid=${lid}; hinge=${hinge};\n\ndifference(){ cube([width,depth,height]); translate([wall,wall,wall]) cube([width-2*wall,depth-2*wall,height]); }\ntranslate([0,depth+12,0]) cube([width,depth,lid]);\nfor(x=[width*.25,width*.5,width*.75]) translate([x,-hinge/2,height]) rotate([0,90,0]) cylinder(d=hinge,h=width/6,center=true);\ntranslate([width*.36,depth-wall,height*.55]) cube([width*.28,wall*2,wall*2]);\n`;
   }
   const { cable, width, wall, opening, base } = values;
   return `// Formwerk Kabelclip — ${stamp}\n$fn=96; cable=${cable}; width=${width}; wall=${wall}; opening=${opening}; base=${base};\n\nunion() {\n  cube([base,width,wall]);\n  translate([base/2,width,wall+cable/2]) rotate([90,0,0])\n    difference() {\n      cylinder(d=cable+2*wall,h=width);\n      translate([0,0,-0.01]) cylinder(d=cable,h=width+0.02);\n      translate([0,-opening/2,-0.01]) cube([cable+2*wall,opening,width+0.02]);\n    }\n}\n`;
