@@ -320,7 +320,7 @@ const MODELS = {
   },
   gridinsert: {
     title: "Gridfinity-Einsatz",
-    defaults: { cols: 2, rows: 1, height: 35, kind: "bits", holes: 8 },
+    defaults: { cols: 2, rows: 2, height: 35, kind: "bits", holes: 8 },
     fields: [
       ["cols", "Rasterbreite", 1, 5, 1, "Breite in 42-mm-Zellen"],
       ["rows", "Rastertiefe", 1, 4, 1, "Tiefe in 42-mm-Zellen"],
@@ -920,14 +920,34 @@ function gridinsertGeometry() {
   g.add(mesh(new THREE.BoxGeometry(w, height, wall), [0, height / 2, d / 2 - wall / 2]));
   g.add(mesh(new THREE.BoxGeometry(wall, height, d), [-w / 2 + wall / 2, height / 2, 0]));
   g.add(mesh(new THREE.BoxGeometry(wall, height, d), [w / 2 - wall / 2, height / 2, 0]));
+  const deckY = Math.max(6, height * 0.28);
+  g.add(mesh(new THREE.BoxGeometry(w - wall * 4, 2.2, d - wall * 4), [0, deckY, 0]));
   const dia = kind === "bits" ? 7 : kind === "nozzles" ? 8.5 : 2.8;
   const count = Math.min(holes, 24);
+  const pitch = kind === "cards" ? 16 : 14;
+  const margin = kind === "cards" ? 13 : 14;
+  const columns = Math.max(1, Math.floor((w - margin * 2) / pitch) + 1);
+  const pocketMaterial = material.clone();
+  pocketMaterial.color = new THREE.Color(0x0c100e);
+  pocketMaterial.roughness = 0.9;
   for (let i = 0; i < count; i++) {
-    const x = -w / 2 + 12 + (i % Math.max(1, Math.floor(w / 14))) * 14;
-    const z = -d / 2 + 14 + Math.floor(i / Math.max(1, Math.floor(w / 14))) * 14;
-    if (z > d / 2 - 10) break;
-    if (kind === "cards") g.add(mesh(new THREE.BoxGeometry(10, height * .5, dia), [x, height * .45, z]));
-    else g.add(mesh(new THREE.CylinderGeometry(dia / 2, dia / 2, height * .45, 32), [x, height * .78, z], [0, 0, 0]));
+    const x = -w / 2 + margin + (i % columns) * pitch;
+    const z = -d / 2 + margin + Math.floor(i / columns) * pitch;
+    if (x > w / 2 - margin || z > d / 2 - margin) break;
+    if (kind === "cards") {
+      const slot = new THREE.Mesh(new THREE.BoxGeometry(10, 1.4, dia + 3), pocketMaterial);
+      slot.position.set(x, deckY + 1.2, z);
+      g.add(slot);
+      g.add(mesh(new THREE.BoxGeometry(1.4, 5, dia + 4), [x - 5.7, deckY + 3, z]));
+      g.add(mesh(new THREE.BoxGeometry(1.4, 5, dia + 4), [x + 5.7, deckY + 3, z]));
+    } else {
+      const pocket = new THREE.Mesh(new THREE.CylinderGeometry(dia / 2, dia / 2, 1.4, 32), pocketMaterial);
+      pocket.position.set(x, deckY + 1.3, z);
+      g.add(pocket);
+      const collar = new THREE.ExtrudeGeometry(ringShape(dia / 2 + 1.4, dia / 2), { depth: 2.4, bevelEnabled: false, curveSegments: 32 });
+      collar.rotateX(-Math.PI / 2);
+      g.add(mesh(collar, [x, deckY + 1.6, z]));
+    }
   }
   return g;
 }
@@ -955,16 +975,27 @@ function lamppanelGeometry() {
   g.add(lineMesh(w, frame, depth, 0, h - frame / 2));
   g.add(lineMesh(h, frame, depth, -w / 2 + frame / 2, h / 2, Math.PI / 2));
   g.add(lineMesh(h, frame, depth, w / 2 - frame / 2, h / 2, Math.PI / 2));
-  const innerW = w - 2 * frame, step = innerW / density;
-  for (let i = 0; i <= density; i++) {
-    const x = -innerW / 2 + i * step;
-    if (pattern === "diagonal") {
-      g.add(lineMesh(Math.hypot(step, h - 2 * frame), 1.8, depth, x, h / 2, Math.atan2(h - 2 * frame, step)));
-    } else if (pattern === "waves") {
-      const curve = new THREE.CatmullRomCurve3(Array.from({ length: 8 }, (_, n) => new THREE.Vector3(x + Math.sin(n) * step * .25, frame + n * (h - 2 * frame) / 7, 0)));
-      g.add(mesh(new THREE.TubeGeometry(curve, 32, .9, 6, false)));
-    } else {
-      for (let y = frame + step / 2; y < h - frame; y += step) g.add(mesh(new THREE.CylinderGeometry(step * .28, step * .28, depth, 32), [x, y, 0], [Math.PI / 2, 0, 0]));
+  const innerW = w - 2 * frame, innerH = h - 2 * frame;
+  const cols = Math.max(2, density);
+  const rows = Math.max(2, Math.round(innerH / (innerW / cols)));
+  const dx = innerW / cols, dy = innerH / rows;
+  const bar = Math.max(1.6, frame * .35);
+  for (let i = 1; i < cols; i++) g.add(lineMesh(innerH, bar, depth, -innerW / 2 + i * dx, h / 2, Math.PI / 2));
+  for (let r = 1; r < rows; r++) g.add(lineMesh(innerW, bar, depth, 0, frame + r * dy));
+  if (pattern === "diagonal") {
+    for (let i = -rows; i <= cols; i += 2) {
+      const x = -innerW / 2 + i * dx;
+      g.add(lineMesh(Math.hypot(innerH, innerH), bar * .85, depth, x + innerH / 2, h / 2, Math.PI / 4));
+    }
+  } else if (pattern === "waves") {
+    for (let r = 0; r < rows; r++) {
+      const y = frame + dy / 2 + r * dy;
+      const curve = new THREE.CatmullRomCurve3(Array.from({ length: cols + 1 }, (_, i) => new THREE.Vector3(-innerW / 2 + i * dx, y + Math.sin(i * Math.PI) * dy * .22, 0)));
+      g.add(mesh(new THREE.TubeGeometry(curve, cols * 8, bar / 2, 6, false)));
+    }
+  } else {
+    for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
+      g.add(mesh(new THREE.TorusGeometry(Math.min(dx, dy) * .22, bar / 3, 8, 24), [-innerW / 2 + dx / 2 + c * dx, frame + dy / 2 + r * dy, 0], [Math.PI / 2, 0, 0]));
     }
   }
   return g;
@@ -1255,7 +1286,7 @@ function scadSource() {
   if (currentModel === "gridinsert") {
     const { cols, rows, height, kind, holes } = values;
     const dia = kind === "bits" ? 7 : kind === "nozzles" ? 8.5 : 2.8;
-    return `// Formwerk Gridfinity-Einsatz — ${stamp}\ncols=${cols}; rows=${rows}; height=${height}; holes=${holes}; dia=${dia}; kind="${kind}"; wall=2.2; w=cols*42; d=rows*42;\n\ndifference(){ cube([w,d,height]); translate([wall,wall,3]) cube([w-2*wall,d-2*wall,height]); }\nfor(i=[0:holes-1]) translate([12+(i%floor(w/14))*14,14+floor(i/floor(w/14))*14,height*.55]) ${kind === "cards" ? `cube([10,dia,height*.5],center=true);` : `cylinder(d=dia,h=height*.45,$fn=32);`}\n`;
+    return `// Formwerk Gridfinity-Einsatz — ${stamp}\n$fn=48; cols=${cols}; rows=${rows}; height=${height}; holes=${holes}; dia=${dia}; kind="${kind}"; wall=2.2; w=cols*42; d=rows*42; pitch=${kind === "cards" ? 16 : 14}; margin=${kind === "cards" ? 13 : 14}; columns=floor((w-margin*2)/pitch)+1;\n\ndifference(){\n  difference(){ cube([w,d,height]); translate([wall,wall,3]) cube([w-2*wall,d-2*wall,height]); }\n  for(i=[0:holes-1]) let(x=margin+(i%columns)*pitch,y=margin+floor(i/columns)*pitch) if(x<=w-margin && y<=d-margin) translate([x,y,2.8]) ${kind === "cards" ? `cube([10,dia+2,6],center=true);` : `cylinder(d=dia,h=8);`}\n}\n`;
   }
   if (currentModel === "electronics") {
     const { width, depth, height, wall, vents, bosses } = values;
@@ -1263,7 +1294,7 @@ function scadSource() {
   }
   if (currentModel === "lamppanel") {
     const { width, height, frame, depth, pattern, density } = values;
-    return `// Formwerk modulares Lampenpanel — ${stamp}\nwidth=${width}; height=${height}; frame=${frame}; depth=${depth}; density=${density}; pattern="${pattern}";\n\nlinear_extrude(depth) difference(){ square([width,height]); translate([frame,frame]) square([width-2*frame,height-2*frame]); }\n// Muster wird in der App als druckbare Leisten erzeugt; fuer OpenSCAD bitte als Stilhinweis nutzen: ${pattern}\n`;
+    return `// Formwerk modulares Lampenpanel — ${stamp}\nwidth=${width}; height=${height}; frame=${frame}; depth=${depth}; density=${density}; pattern="${pattern}"; bar=max(1.6,frame*.35); cols=density; rows=round((height-2*frame)/((width-2*frame)/cols)); dx=(width-2*frame)/cols; dy=(height-2*frame)/rows;\n\nmodule line2d(p1,p2,w=bar){ hull(){ translate(p1) circle(d=w,$fn=12); translate(p2) circle(d=w,$fn=12); } }\nlinear_extrude(depth) union(){\n  difference(){ square([width,height]); translate([frame,frame]) square([width-2*frame,height-2*frame]); }\n  for(i=[1:cols-1]) line2d([frame+i*dx,frame],[frame+i*dx,height-frame]);\n  for(r=[1:rows-1]) line2d([frame,frame+r*dy],[width-frame,frame+r*dy]);\n  if(pattern=="holes") for(c=[0:cols-1],r=[0:rows-1]) translate([frame+dx/2+c*dx,frame+dy/2+r*dy]) difference(){ circle(r=min(dx,dy)*.22+bar/3,$fn=24); circle(r=min(dx,dy)*.22,$fn=24); }\n}\n`;
   }
   if (currentModel === "batteryholder") {
     const { cells, type, wall, height } = values;
