@@ -1,4 +1,4 @@
-import * as THREE from "three";
+ï»¿import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { STLExporter } from "three/examples/jsm/exporters/STLExporter.js";
 import { MODELS } from './models.js';
@@ -124,10 +124,10 @@ function updateStats() {
   modelGroup.traverse(child => {
     if (child.isMesh) triangles += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
   });
-  document.querySelector("#triangle-count").textContent = Math.round(triangles).toLocaleString("de-DE");
+  document.querySelector("#triangle-count").textContent = Math.round(triangles).toLocaleString("en-US");
   const size = new THREE.Vector3();
   new THREE.Box3().setFromObject(modelGroup).getSize(size);
-  const dimensions = `${size.x.toFixed(0)} × ${size.z.toFixed(0)} × ${size.y.toFixed(0)} mm`;
+  const dimensions = `${size.x.toFixed(0)} x ${size.z.toFixed(0)} x ${size.y.toFixed(0)} mm`;
   let volume = 0;
   modelGroup.traverse(child => {
     if (!child.isMesh) return;
@@ -144,7 +144,7 @@ function updateStats() {
   });
   volume /= 1000;
   document.querySelector("#top-dimensions").textContent = dimensions;
-  document.querySelector("#volume").textContent = volume.toFixed(1).replace(".", ",");
+  document.querySelector("#volume").textContent = volume.toFixed(1);
 }
 
 function resetCamera() {
@@ -167,7 +167,7 @@ function download(data, filename, type) {
   link.download = filename;
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-  toast(`${filename} wurde erstellt`);
+  toast(`${filename} created`);
 }
 
 function toast(message) {
@@ -214,3 +214,4 @@ renderForm();
 updateModel();
 resize();
 animate();
+

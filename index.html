@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#101412" />
-    <title>Formwerk — Parametric 3D</title>
+    <title>Formwerk - Parametric 3D</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,229 +21,93 @@
         </a>
         <div class="top-status">
           <span class="status-dot"></span>
-          <span>Modell bereit</span>
+          <span>Model ready</span>
           <span class="divider"></span>
-          <span id="top-dimensions">80 × 60 × 24 mm</span>
+          <span id="top-dimensions">80 x 60 x 24 mm</span>
         </div>
-        <button class="ghost-button" id="reset-view">Ansicht zentrieren</button>
+        <button class="ghost-button" id="reset-view">Center view</button>
       </header>
 
       <main class="workspace">
         <aside class="sidebar">
           <section class="sidebar-head">
-            <p class="eyebrow">01 / Grundkörper</p>
-            <h1>Was möchtest<br>du bauen?</h1>
-            <p class="intro">Wähle eine Form und passe sie millimetergenau an.</p>
+            <p class="eyebrow">01 / Models</p>
+            <h1>What do you<br>want to build?</h1>
+            <p class="intro">Choose a template and tune every dimension in millimeters.</p>
           </section>
 
           <nav class="model-list" id="model-list">
-            <button class="model-card active" data-model="box">
-              <span class="model-icon box-icon"></span>
-              <span><strong>Gehäuse</strong><small>Offene Box mit Wänden</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="cylinder">
-              <span class="model-icon cylinder-icon"></span>
-              <span><strong>Hülse</strong><small>Rohr oder massiver Zylinder</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="bracket">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Winkelhalter</strong><small>L-Profil mit Bohrungen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="lid">
-              <span class="model-icon lid-icon"></span>
-              <span><strong>Steckdeckel</strong><small>Deckel mit passendem Rand</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="spacer">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Abstandshalter</strong><small>Hülse für Schrauben</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="plate">
-              <span class="model-icon plate-icon"></span>
-              <span><strong>Montageplatte</strong><small>Platte mit vier Bohrungen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="knob">
-              <span class="model-icon knob-icon"></span>
-              <span><strong>Drehknopf</strong><small>Gerändelter Bedienknopf</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="clip">
-              <span class="model-icon clip-icon"></span>
-              <span><strong>Kabelclip</strong><small>Offener Clip zum Anschrauben</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="wallmount">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Wandhalter, 2-teilig</strong><small>Steckschiene mit Wandplatte</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="foot">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Gerätefuß</strong><small>Fuß mit Schraubenbohrung</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="washer">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Unterlegscheibe</strong><small>Passgenaue Distanzscheibe</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="hook">
-              <span class="model-icon clip-icon"></span>
-              <span><strong>Wandhaken</strong><small>Haken mit Montageplatte</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="handle">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Möbelgriff</strong><small>Griff mit zwei Füßen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="grommet">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Kabeldurchführung</strong><small>Ring für Tischbohrungen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="funnel">
-              <span class="model-icon cylinder-icon"></span>
-              <span><strong>Trichter</strong><small>Trichter mit Auslauf</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="phone">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Handyhalter</strong><small>Geneigter Tischständer</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="corner">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Eckverbinder</strong><small>Verstärkter 90°-Winkel</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="shelf">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Regalbodenträger</strong><small>Träger mit Wandplatte</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="gridbin">
-              <span class="model-icon box-icon"></span>
-              <span><strong>Rasterbox</strong><small>Stapelbare Werkstattbox</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="organizer">
-              <span class="model-icon box-icon"></span>
-              <span><strong>Fächerbox</strong><small>Sortierbox mit Trennwänden</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="cablecomb">
-              <span class="model-icon plate-icon"></span>
-              <span><strong>Kabelkamm</strong><small>Ordnet parallele Kabel</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="adapter">
-              <span class="model-icon cylinder-icon"></span>
-              <span><strong>Schlauchadapter</strong><small>Reduzierung für zwei Durchmesser</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="pipeclamp">
-              <span class="model-icon clip-icon"></span>
-              <span><strong>Rohrschelle</strong><small>Offene Schelle mit Füßen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="bearing">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Lagerhalter</strong><small>Aufnahme für Kugellager</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="servo">
-              <span class="model-icon bracket-icon"></span>
-              <span><strong>Servo-Halter</strong><small>U-Halter für Modellbau-Servos</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="drillguide">
-              <span class="model-icon plate-icon"></span>
-              <span><strong>Bohrschablone</strong><small>Gleichmäßige Lochreihe</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="labelholder">
-              <span class="model-icon lid-icon"></span>
-              <span><strong>Labelhalter</strong><small>Aufsteller für Karten und Schilder</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="magnetcup">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Magnetaufnahme</strong><small>Einpresshalter für Rundmagnete</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="kumiko">
-              <span class="model-icon plate-icon"></span>
-              <span><strong>Kumiko-Lampe</strong><small>Laterne mit japanischem Muster</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="gridinsert">
-              <span class="model-icon box-icon"></span>
-              <span><strong>Gridfinity-Einsatz</strong><small>Bit-, Düsen- oder Kartenhalter</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="electronics">
-              <span class="model-icon box-icon"></span>
-              <span><strong>Elektronikgehäuse</strong><small>Box mit Lüftung und Schraubdomen</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="lamppanel">
-              <span class="model-icon plate-icon"></span>
-              <span><strong>Lampenpanel</strong><small>Modulares Lichtpanel mit Muster</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="batteryholder">
-              <span class="model-icon spacer-icon"></span>
-              <span><strong>Batteriehalter</strong><small>AA, AAA oder 18650 Organizer</small></span>
-              <span class="arrow">↗</span>
-            </button>
-            <button class="model-card" data-model="hingebox">
-              <span class="model-icon lid-icon"></span>
-              <span><strong>Scharnierbox</strong><small>Box mit Deckel und Schnappnase</small></span>
-              <span class="arrow">↗</span>
-            </button>
+            <button class="model-card active" data-model="box"><span class="model-icon box-icon"></span><span><strong>Case</strong><small>Open box with walls</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="cylinder"><span class="model-icon cylinder-icon"></span><span><strong>Sleeve</strong><small>Tube or solid cylinder</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="bracket"><span class="model-icon bracket-icon"></span><span><strong>Angle bracket</strong><small>L-profile with holes</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="lid"><span class="model-icon lid-icon"></span><span><strong>Push-fit lid</strong><small>Lid with matching lip</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="spacer"><span class="model-icon spacer-icon"></span><span><strong>Spacer</strong><small>Screw standoff sleeve</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="plate"><span class="model-icon plate-icon"></span><span><strong>Mounting plate</strong><small>Plate with four holes</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="knob"><span class="model-icon knob-icon"></span><span><strong>Knurled knob</strong><small>Ribbed control knob</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="clip"><span class="model-icon clip-icon"></span><span><strong>Cable clip</strong><small>Open screw-down clip</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="wallmount"><span class="model-icon bracket-icon"></span><span><strong>Wall mount, 2-part</strong><small>Slide rail with wall plate</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="foot"><span class="model-icon spacer-icon"></span><span><strong>Device foot</strong><small>Foot with screw hole</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="washer"><span class="model-icon spacer-icon"></span><span><strong>Washer</strong><small>Custom spacer washer</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="hook"><span class="model-icon clip-icon"></span><span><strong>Wall hook</strong><small>Hook with mounting plate</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="handle"><span class="model-icon bracket-icon"></span><span><strong>Furniture handle</strong><small>Handle with two posts</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="grommet"><span class="model-icon spacer-icon"></span><span><strong>Cable grommet</strong><small>Ring for desk cutouts</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="funnel"><span class="model-icon cylinder-icon"></span><span><strong>Funnel</strong><small>Funnel with spout</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="phone"><span class="model-icon bracket-icon"></span><span><strong>Phone stand</strong><small>Angled desktop stand</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="corner"><span class="model-icon bracket-icon"></span><span><strong>Corner connector</strong><small>Reinforced 90 degree bracket</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="shelf"><span class="model-icon bracket-icon"></span><span><strong>Shelf bracket</strong><small>Support with wall plate</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="gridbin"><span class="model-icon box-icon"></span><span><strong>Grid box</strong><small>Stackable workshop bin</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="organizer"><span class="model-icon box-icon"></span><span><strong>Compartment box</strong><small>Organizer with dividers</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="cablecomb"><span class="model-icon plate-icon"></span><span><strong>Cable comb</strong><small>Keeps parallel cables tidy</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="adapter"><span class="model-icon cylinder-icon"></span><span><strong>Hose adapter</strong><small>Reducer for two diameters</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="pipeclamp"><span class="model-icon clip-icon"></span><span><strong>Pipe clamp</strong><small>Open clamp with feet</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="bearing"><span class="model-icon spacer-icon"></span><span><strong>Bearing holder</strong><small>Socket for ball bearings</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="servo"><span class="model-icon bracket-icon"></span><span><strong>Servo mount</strong><small>U-bracket for hobby servos</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="drillguide"><span class="model-icon plate-icon"></span><span><strong>Drill guide</strong><small>Evenly spaced hole row</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="labelholder"><span class="model-icon lid-icon"></span><span><strong>Label holder</strong><small>Stand for cards and labels</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="magnetcup"><span class="model-icon spacer-icon"></span><span><strong>Magnet cup</strong><small>Press-fit holder for round magnets</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="kumiko"><span class="model-icon plate-icon"></span><span><strong>Kumiko lamp</strong><small>Lantern with Japanese patterns</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="gridinsert"><span class="model-icon box-icon"></span><span><strong>Gridfinity insert</strong><small>Bit, nozzle, or card holder</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="electronics"><span class="model-icon box-icon"></span><span><strong>Electronics case</strong><small>Box with vents and screw bosses</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="lamppanel"><span class="model-icon plate-icon"></span><span><strong>Lamp panel</strong><small>Modular light panel with pattern</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="batteryholder"><span class="model-icon spacer-icon"></span><span><strong>Battery holder</strong><small>AAA, AA, or 18650 organizer</small></span><span class="arrow">-></span></button>
+            <button class="model-card" data-model="hingebox"><span class="model-icon lid-icon"></span><span><strong>Hinged box</strong><small>Box with lid and latch</small></span><span class="arrow">-></span></button>
           </nav>
 
           <section class="sidebar-note">
             <span>i</span>
-            <p>Alle Maße sind in Millimetern. STL-Dateien werden direkt lokal erzeugt.</p>
+            <p>All dimensions are in millimeters. STL files are generated locally.</p>
           </section>
         </aside>
 
         <section class="viewport-panel">
           <div class="viewport-toolbar">
             <div>
-              <p class="eyebrow">Live Vorschau</p>
-              <h2 id="model-title">Gehäuse</h2>
+              <p class="eyebrow">Live Preview</p>
+              <h2 id="model-title">Case</h2>
             </div>
             <div class="view-actions">
-              <button class="icon-button active" title="Perspektive">◇</button>
-              <button class="icon-button" id="toggle-grid" title="Raster ein-/ausblenden">#</button>
+              <button class="icon-button active" title="Perspective">◇</button>
+              <button class="icon-button" id="toggle-grid" title="Toggle grid">#</button>
             </div>
           </div>
           <div id="viewport">
             <div class="axis-label axis-x">X</div>
             <div class="axis-label axis-y">Y</div>
             <div class="axis-label axis-z">Z</div>
-            <div class="viewport-hint">Ziehen zum Drehen · Scrollen zum Zoomen</div>
+            <div class="viewport-hint">Drag to rotate - scroll to zoom</div>
           </div>
           <div class="viewport-footer">
-            <span><b id="triangle-count">0</b> Dreiecke</span>
-            <span><b id="volume">0</b> cm³ Volumen</span>
-            <span class="quality"><i></i> Druckbar</span>
+            <span><b id="triangle-count">0</b> triangles</span>
+            <span><b id="volume">0</b> cm3 volume</span>
+            <span class="quality"><i></i> Printable</span>
           </div>
         </section>
 
         <aside class="parameters">
           <div class="parameters-head">
-            <p class="eyebrow">02 / Parameter</p>
-            <h2>Abmessungen</h2>
-            <button class="text-button" id="reset-params">Zurücksetzen</button>
+            <p class="eyebrow">02 / Parameters</p>
+            <h2>Dimensions</h2>
+            <button class="text-button" id="reset-params">Reset</button>
           </div>
           <div id="parameter-form" class="parameter-form"></div>
 
@@ -251,17 +115,17 @@
             <div class="export-head">
               <div>
                 <p class="eyebrow">03 / Export</p>
-                <h2>Bereit zum Drucken</h2>
+                <h2>Ready to print</h2>
               </div>
-              <span class="check">✓</span>
+              <span class="check">OK</span>
             </div>
             <button class="primary-button" id="export-stl">
-              <span>STL herunterladen</span>
-              <small>Für deinen Slicer</small>
-              <b>↓</b>
+              <span>Download STL</span>
+              <small>For your slicer</small>
+              <b>v</b>
             </button>
             <button class="secondary-button" id="export-scad">
-              <span>OpenSCAD-Datei</span>
+              <span>OpenSCAD file</span>
               <b>.SCAD</b>
             </button>
           </section>
